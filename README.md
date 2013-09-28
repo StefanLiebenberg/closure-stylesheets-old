@@ -5,16 +5,15 @@ To include closure-stylesheets into you're maven project make these changes to y
 
 Add a entry into the `<repositories>` section:
 
-    <repositories>
-      <repository>
-        <id>StefanLiebenberg-ClosureStylesheets</id>
-          <name>ClosureStylesheets</name>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <url>https://raw.github.com/StefanLiebenberg/closure-stylesheets/releases</url>
-      </repository>
-    </repositories>
+    <repository>
+      <name>Github - Stefan Liebenberg</name>
+      <id>github-StefanLiebenberg</id>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <url>https://raw.github.com/StefanLiebenberg/maven/releases</url>
+    </repository>
+
 
 Add a entry into the `<dependencies>` section:
 

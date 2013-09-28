@@ -13,8 +13,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<project xsi:schemaLocation=
-                 "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.google.closure-stylesheets</groupId>
@@ -171,9 +172,14 @@
     </build>
     <distributionManagement>
         <repository>
-            <id>StefanLiebenberg-ClosureStylesheets</id>
-            <name>ClosureStylesheets</name>
-            <url>git:releases://git@github.com:StefanLiebenberg/google-stylesheets.git</url>
+            <name>Github - Stefan Liebenberg</name>
+            <id>github-StefanLiebenberg</id>
+            <url>git:releases://git@github.com:StefanLiebenberg/maven.git</url>
         </repository>
+        <snapshotRepository>
+            <id>Github - Stefan Liebenberg - Snapshots</id>
+            <name>github-StefanLiebenberg-Snapshots</name>
+            <url>git:snapshots://git@github.com:StefanLiebenberg/maven.git</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>
