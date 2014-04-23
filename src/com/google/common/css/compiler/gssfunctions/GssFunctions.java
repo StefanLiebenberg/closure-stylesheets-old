@@ -862,7 +862,8 @@ public class GssFunctions {
         throws GssFunctionException {
       List<CssNumericNode> numericList = Lists.newArrayList();
       for (String arg : args) {
-        Size sizeWithUnits = parseSize(arg);
+        // Note, the unit may be 'NO_UNITS'
+        Size sizeWithUnits = parseSize(arg, true /* isUnitOptional */);
         numericList.add(
             new CssNumericNode(sizeWithUnits.size, sizeWithUnits.units));
       }
@@ -918,11 +919,6 @@ public class GssFunctions {
      */
     protected boolean isIdentityValue(double value) {
       return false;
-    }
-
-    protected Size parseSize(String sizeWithUnits)
-        throws GssFunctionException {
-      return GssFunctions.parseSize(sizeWithUnits, /* isUnitOptional */ false);
     }
   }
 
@@ -1016,24 +1012,6 @@ public class GssFunctions {
       return new CssNumericNode(resultString,
           overallUnit != null ? overallUnit : CssNumericNode.NO_UNITS,
           args.get(0).getSourceCodeLocation());
-    }
-
-    @Override
-    public String getCallResultString(List<String> args)
-        throws GssFunctionException {
-      List<CssNumericNode> numericList = Lists.newArrayList();
-      for (String arg : args) {
-        Size sizeWithUnits = parseSize(arg);
-        numericList.add(
-            new CssNumericNode(sizeWithUnits.size, sizeWithUnits.units));
-      }
-      CssNumericNode result = calculate(numericList, null);
-      return result.getNumericPart() + result.getUnit();
-    }
-
-    @Override
-    protected Size parseSize(String size) throws GssFunctionException {
-      return GssFunctions.parseSize(size, /* isUnitOptional */ true);
     }
   }
 
@@ -1145,7 +1123,7 @@ public class GssFunctions {
         return originalColorStr;
       }
       Color originalColor = ColorParser.parseAny(originalColorStr);
-      float brightnessFloat = Float.parseFloat(brightnessStr) / (float)100.0;
+      float brightnessFloat = Float.parseFloat(brightnessStr) / (float) 100.0;
 
       float[] originalColorHsb = toHsb(originalColor);
       float requestedBrightness = originalColorHsb[2] + brightnessFloat;

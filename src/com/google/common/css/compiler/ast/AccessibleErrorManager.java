@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Google Inc.
+ * Copyright 2013 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,20 @@
 
 package com.google.common.css.compiler.ast;
 
-import com.google.common.css.*;
+import java.util.SortedSet;
 
-public class GssParserException extends Exception {
-  private static final long serialVersionUID = 1L;
-
-  private GssError gssError;
-
-  public GssParserException(SourceCodeLocation location, Throwable cause) {
-    super("Parse error", cause);
-    this.gssError = new GssError("Parse error", location);
+/**
+ * A {@see BasicErrorManager} that makes its errors and warnings
+ * accessible to clients.
+ */
+public final class AccessibleErrorManager extends BasicErrorManager {
+  public SortedSet<GssError> getErrors() {
+    return errors;
   }
 
-  public GssParserException(SourceCodeLocation location) {
-    this(location, null);
+  public SortedSet<GssError> getWarnings() {
+    return warnings;
   }
 
-  public GssError getGssError() {
-    return gssError;
-  }
-
-  @Override
-  public String getMessage() {
-    return gssError.format();
-  }
+  @Override public void print(String msg) {}
 }

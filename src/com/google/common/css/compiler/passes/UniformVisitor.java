@@ -20,8 +20,8 @@ import com.google.common.css.compiler.ast.CssAttributeSelectorNode;
 import com.google.common.css.compiler.ast.CssBlockNode;
 import com.google.common.css.compiler.ast.CssClassSelectorNode;
 import com.google.common.css.compiler.ast.CssCombinatorNode;
-import com.google.common.css.compiler.ast.CssCompositeValueNode;
 import com.google.common.css.compiler.ast.CssComponentNode;
+import com.google.common.css.compiler.ast.CssCompositeValueNode;
 import com.google.common.css.compiler.ast.CssConditionalBlockNode;
 import com.google.common.css.compiler.ast.CssConditionalRuleNode;
 import com.google.common.css.compiler.ast.CssDeclarationBlockNode;
@@ -37,15 +37,17 @@ import com.google.common.css.compiler.ast.CssKeyNode;
 import com.google.common.css.compiler.ast.CssKeyframeRulesetNode;
 import com.google.common.css.compiler.ast.CssKeyframesNode;
 import com.google.common.css.compiler.ast.CssMediaRuleNode;
-import com.google.common.css.compiler.ast.CssMixinNode;
 import com.google.common.css.compiler.ast.CssMixinDefinitionNode;
+import com.google.common.css.compiler.ast.CssMixinNode;
 import com.google.common.css.compiler.ast.CssNode;
 import com.google.common.css.compiler.ast.CssNodesListNode;
 import com.google.common.css.compiler.ast.CssPageRuleNode;
 import com.google.common.css.compiler.ast.CssPageSelectorNode;
 import com.google.common.css.compiler.ast.CssPropertyValueNode;
+import com.google.common.css.compiler.ast.CssProvideNode;
 import com.google.common.css.compiler.ast.CssPseudoClassNode;
 import com.google.common.css.compiler.ast.CssPseudoElementNode;
+import com.google.common.css.compiler.ast.CssRequireNode;
 import com.google.common.css.compiler.ast.CssRootNode;
 import com.google.common.css.compiler.ast.CssRulesetNode;
 import com.google.common.css.compiler.ast.CssSelectorListNode;
@@ -556,4 +558,31 @@ public class UniformVisitor implements CssTreeVisitor {
   /** Traverse the (sub) tree starting at {@code node} */
   @Override
   public void visit(CssNode node) {}
+
+  /** Called before visiting a {@code CssProvideNode} */
+  @Override
+  public boolean enterProvideNode(CssProvideNode node) {
+    enter(node);
+    return true;
+  }
+
+  /** Called after visiting a {@code CssProvideNode} */
+  @Override
+  public void leaveProvideNode(CssProvideNode node) {
+    leave(node);
+  }
+
+  /** Called before visiting a {@code CssRequireNode} */
+  @Override
+  public boolean enterRequireNode(CssRequireNode node) {
+    enter(node);
+    return true;
+  }
+
+  /** Called after visiting a {@code CssRequireNode} */
+  @Override
+  public void leaveRequireNode(CssRequireNode node) {
+    leave(node);
+  }
+
 }

@@ -16,7 +16,8 @@
 
 package com.google.common.css.compiler.commandline;
 
-import com.google.common.base.Charsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.css.AbstractCommandLineCompiler;
@@ -114,7 +115,7 @@ public class ClosureCommandLineCompiler extends DefaultCommandLineCompiler {
     private String renameFile = null;
 
     @Option(name = "--output-renaming-map-format", usage = "How to format the"
-        + " output from the the CSS class renaming.")
+        + " output from the CSS class renaming.")
     private OutputRenamingMapFormat outputRenamingMapFormat =
         OutputRenamingMapFormat.JSON;
 
@@ -218,7 +219,7 @@ public class ClosureCommandLineCompiler extends DefaultCommandLineCompiler {
 
         String fileContents;
         try {
-          fileContents = Files.toString(file, Charsets.UTF_8);
+          fileContents = Files.toString(file, UTF_8);
         } catch (IOException e) {
           throw new RuntimeException(e);
         }
@@ -293,7 +294,7 @@ public class ClosureCommandLineCompiler extends DefaultCommandLineCompiler {
       System.out.print(compilerOutput);
     } else {
       try {
-        Files.write(compilerOutput, outputInfo.outputFile, Charsets.UTF_8);
+        Files.write(compilerOutput, outputInfo.outputFile, UTF_8);
       } catch (IOException e) {
         AbstractCommandLineCompiler.exitOnUnhandledException(e,
             exitCodeHandler);

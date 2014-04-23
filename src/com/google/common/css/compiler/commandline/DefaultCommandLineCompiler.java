@@ -16,7 +16,8 @@
 
 package com.google.common.css.compiler.commandline;
 
-import com.google.common.base.Charsets;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.common.base.Preconditions;
 import com.google.common.css.AbstractCommandLineCompiler;
 import com.google.common.css.ExitCodeHandler;
@@ -26,6 +27,7 @@ import com.google.common.css.RecordingSubstitutionMap;
 import com.google.common.css.compiler.ast.BasicErrorManager;
 import com.google.common.css.compiler.ast.CssTree;
 import com.google.common.css.compiler.ast.ErrorManager;
+import com.google.common.css.compiler.ast.GssError;
 import com.google.common.css.compiler.ast.GssParser;
 import com.google.common.css.compiler.ast.GssParserException;
 import com.google.common.css.compiler.passes.CompactPrinter;
@@ -57,10 +59,10 @@ public class DefaultCommandLineCompiler extends AbstractCommandLineCompiler {
   private final PassRunner passRunner;
 
   /**
-   * Constructs a {@code NewCommandLineCompiler}.
+   * Constructs a {@code DefaultCommandLineCompiler}.
    *
-   * @param job the inputs the compiler should process and the options to use
-   * @param errorManager the error manager to use for error reporting
+   * @param job The inputs the compiler should process and the options to use.
+   * @param errorManager The error manager to use for error reporting.
    */
   protected DefaultCommandLineCompiler(JobDescription job,
       ExitCodeHandler exitCodeHandler, ErrorManager errorManager) {
@@ -143,7 +145,7 @@ public class DefaultCommandLineCompiler extends AbstractCommandLineCompiler {
           .getRecordingSubstitutionMap();
       if (recordingSubstitutionMap != null && renameFile != null) {
         PrintWriter renamingMapWriter = new PrintWriter(
-            Files.newWriter(renameFile, Charsets.UTF_8));
+            Files.newWriter(renameFile, UTF_8));
         Map<String, String> renamingMap = recordingSubstitutionMap
             .getMappings();
         writeRenamingMap(renamingMap, renamingMapWriter);
@@ -176,7 +178,7 @@ public class DefaultCommandLineCompiler extends AbstractCommandLineCompiler {
    * <pre>
    * key:value
    * </pre>
-   * Subclasses may override this method to provide alternate output formats.
+   * <p>Subclasses may override this method to provide alternate output formats.
    * Subclasses <em>must not</em> close the writer.
    */
   protected void writeRenamingMap(Map<String, String> renamingMap,
@@ -188,10 +190,25 @@ public class DefaultCommandLineCompiler extends AbstractCommandLineCompiler {
   /**
    * An error message handler.
    */
-  protected static class CompilerErrorManager extends BasicErrorManager {
+  protected static final class CompilerErrorManager extends BasicErrorManager {
+    private boolean warningsAsErrors = false;
+
     @Override
     public void print(String msg) {
       System.err.println(msg);
+    }
+
+    @Override
+    public void reportWarning(GssError warning) {
+      if (warningsAsErrors) {
+        report(warning);
+      } else {
+        super.reportWarning(warning);
+      }
+    }
+
+    public void setWarningsAsErrors(boolean state) {
+      warningsAsErrors = state;
     }
   }
 }

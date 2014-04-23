@@ -515,4 +515,14 @@ public class CompactPrinter extends DefaultTreeVisitor
     }
     sb.append(node.toString());
   }
+
+  public static String printCompactly(CssNode n) {
+    CompactPrinter p = new CompactPrinter(n);
+    p.runPass();
+    return p.getCompactPrintedString().trim();
+  }
+
+  public static String printCompactly(CssTree t) {
+    return printCompactly(t.getRoot());
+  }
 }
