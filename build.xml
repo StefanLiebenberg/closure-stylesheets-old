@@ -192,8 +192,10 @@
     <mkdir dir="${pom.xml.dir}" />
     <copy file="${basedir}/pom.template.xml"
           tofile="${pom.xml}">
-      <filterset>
+      <filterset recurse="true" >
         <filter token="build.yyyymmdd" value="${build.yyyymmdd}" />
+        <filter token="src.dir" value="../../src" />
+        <filter token="tests.dir" value="../../tests" />
       </filterset>
     </copy>
 
@@ -269,5 +271,12 @@
       <arg value="-Pgpg" />
     </artifact:mvn>
   </target>
+
+    <target name="mvn-sign" depends="pom">
+        <artifact:mvn>
+            <arg value="gpg:sign" />
+            <arg value="-DpomFile=${pom.xml}" />
+        </artifact:mvn>
+    </target>
 
 </project>
