@@ -61,11 +61,13 @@ public final class Property {
         builder("animation-delay"),
         builder("animation-direction"),
         builder("animation-duration"),
+        builder("animation-fill-mode"),
         builder("animation-iteration-count"),
         builder("animation-name"),
         builder("animation-play-state"),
         builder("animation-timing-function"),
         builder("azimuth"),
+        builder("backface-visibility"),
         builder("background-attachment"),
         builder("background-clip"),
         builder("background-color"),
@@ -236,6 +238,7 @@ public final class Property {
         builder("max-width"),
         builder("min-height"),
         builder("min-width"),
+        builder("mix-blend-mode"),
         builder("-moz-animation"),
         builder("-moz-animation-delay"),
         builder("-moz-animation-direction"),
@@ -270,18 +273,14 @@ public final class Property {
         builder("-moz-border-start-style"),
         builder("-moz-border-start-width"),
         builder("-moz-border-top-colors"),
-        builder("-moz-box-align").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-moz-box-direction").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-moz-box-flex").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-moz-box-ordinal-group").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-moz-box-orient").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-moz-box-pack").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
+        // These deprecated flexbox properties are only supported for backwards compatibility.
+        builder("-moz-box-align"),
+        builder("-moz-box-direction"),
+        builder("-moz-box-flex"),
+        builder("-moz-box-ordinal-group"),
+        builder("-moz-box-orient"),
+        builder("-moz-box-pack"),
+        // End of deprecated flexbox properties.
         builder("-moz-box-shadow"),
         builder("-moz-box-sizing"),
         builder("-moz-column-count"),
@@ -305,6 +304,7 @@ public final class Property {
         builder("-moz-margin-start"),
         builder("-moz-opacity"),
         builder("-moz-orient"),
+        builder("-moz-osx-font-smoothing"),
         builder("-moz-outline-radius"),
         builder("-moz-outline-radius-bottomleft"),
         builder("-moz-outline-radius-bottomright"),
@@ -338,6 +338,7 @@ public final class Property {
         builder("-moz-user-select"),
         builder("-moz-window-shadow"),
         builder("-ms-accelerator"),
+        builder("-ms-align-items"),
         builder("-ms-animation"),
         builder("-ms-animation-delay"),
         builder("-ms-animation-direction"),
@@ -351,27 +352,29 @@ public final class Property {
         builder("-ms-background-position-y"),
         builder("-ms-behavior"),
         builder("-ms-block-progression"),
-        builder("-ms-box-align").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-direction").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-flex").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-line-progression").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-lines").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-ordinal-group").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-orient").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-ms-box-pack").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
+        // These deprecated flexbox properties are only supported for backwards compatibility.
+        builder("-ms-box-align"),
+        builder("-ms-box-direction"),
+        builder("-ms-box-flex"),
+        builder("-ms-box-line-progression"),
+        builder("-ms-box-lines"),
+        builder("-ms-box-ordinal-group"),
+        builder("-ms-box-orient"),
+        builder("-ms-box-pack"),
+        // End of deprecated flexbox properties.
         builder("-ms-box-shadow"),
         builder("-ms-box-sizing"),
         builder("-ms-filter"),
         builder("-ms-flex"),
+        builder("-ms-flex-align"),
         builder("-ms-flex-direction"),
+        builder("-ms-flex-flow"),
+        builder("-ms-flex-negative"),
+        builder("-ms-flex-order"),
+        builder("-ms-flex-pack"),
+        builder("-ms-flex-positive"),
+        builder("-ms-flex-preferred-size"),
+        builder("-ms-flex-wrap"),
         builder("-ms-grid-column"),
         builder("-ms-grid-column-align"),
         builder("-ms-grid-column-span"),
@@ -381,6 +384,7 @@ public final class Property {
         builder("-ms-grid-row-align"),
         builder("-ms-grid-row-span"),
         builder("-ms-grid-rows"),
+        builder("-ms-high-contrast-adjust"),
         builder("-ms-ime-mode"),
         builder("-ms-interpolation-mode"),
         builder("-ms-justify-content"),
@@ -431,6 +435,8 @@ public final class Property {
         builder("-o-animation-play-state"),
         builder("-o-animation-timing-function"),
         builder("-o-background-size"),
+        builder("-o-object-fit"),
+        builder("-o-object-position"),
         builder("-o-text-overflow"),
         builder("-o-transform"),
         builder("-o-transform-origin"),
@@ -439,6 +445,8 @@ public final class Property {
         builder("-o-transition-duration"),
         builder("-o-transition-property"),
         builder("-o-transition-timing-function"),
+        builder("object-fit"),
+        builder("object-position"),
         builder("opacity"),
         builder("order"),
         builder("orphans"),
@@ -481,6 +489,9 @@ public final class Property {
         builder("scrollbar-shadow-color").setVendor(Vendor.MICROSOFT),
         builder("scrollbar-track-color").setVendor(Vendor.MICROSOFT),
         builder("shape-rendering").isSvgOnly(),
+        builder("shape-image-threshold"),
+        builder("shape-margin"),
+        builder("shape-outside"),
         builder("size"),
         builder("speak-header"),
         builder("speak-numeral"),
@@ -519,12 +530,14 @@ public final class Property {
         builder("top"),
         builder("transform"),
         builder("transform-origin"),
+        builder("transform-style"),
         builder("transition-delay"),
         builder("transition-duration"),
         builder("transition-property"),
         builder("transition-timing-function"),
         builder("transition"),
         builder("unicode-bidi"),
+        builder("unicode-range"),
         builder("vertical-align"),
         builder("visibility"),
         builder("voice-balance"),
@@ -548,6 +561,7 @@ public final class Property {
         builder("-webkit-animation-name"),
         builder("-webkit-animation-play-state"),
         builder("-webkit-animation-timing-function"),
+        builder("-webkit-app-region"),
         builder("-webkit-appearance"),
         builder("-webkit-aspect-ratio"),
         builder("-webkit-backface-visibility"),
@@ -580,25 +594,20 @@ public final class Property {
         builder("-webkit-border-top-left-radius"),
         builder("-webkit-border-top-right-radius"),
         builder("-webkit-border-vertical-spacing"),
-        builder("-webkit-box-align").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-direction").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-flex").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-flex-group").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-lines").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-ordinal-group").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-orient").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
-        builder("-webkit-box-pack").warn(
-            "The flexbox spec has changed and this property is no longer supported."),
+        // These deprecated flexbox properties are only supported for backwards compatibility.
+        builder("-webkit-box-align"),
+        builder("-webkit-box-direction"),
+        builder("-webkit-box-flex"),
+        builder("-webkit-box-flex-group"),
+        builder("-webkit-box-lines"),
+        builder("-webkit-box-ordinal-group"),
+        builder("-webkit-box-orient"),
+        builder("-webkit-box-pack"),
+        // End of deprecated flexbox properties.
         builder("-webkit-box-reflect"),
         builder("-webkit-box-shadow"),
         builder("-webkit-box-sizing"),
+        builder("-webkit-clip-path"),
         builder("-webkit-color-correction"),
         builder("-webkit-column-axis"),
         builder("-webkit-column-break-after"),
@@ -688,6 +697,7 @@ public final class Property {
         builder("-webkit-min-logical-width"),
         builder("-webkit-nbsp-mode"),
         builder("-webkit-opacity"),
+        builder("-webkit-order"),
         builder("-webkit-overflow-scrolling"),
         builder("-webkit-padding-after"),
         builder("-webkit-padding-before"),
@@ -738,6 +748,7 @@ public final class Property {
         builder("-webkit-wrap-through"),
         builder("white-space"),
         builder("windows"),
+        builder("will-change"),
         builder("width"),
         builder("word-break"),
         builder("word-spacing"),
@@ -790,7 +801,8 @@ public final class Property {
 
   private static Property createUserDefinedProperty(String name) {
     Preconditions.checkArgument(!NAME_TO_PROPERTY_MAP.containsKey(name));
-    Builder builder = builder(name);
+    Builder builder = builder(name)
+        .setShorthands(ImmutableSet.<String>of());
     return builder.build();
   }
 
@@ -918,8 +930,7 @@ public final class Property {
   @VisibleForTesting
   static final class Builder {
     private final String name;
-    private final Set<String> shorthands;
-    private final String partition;
+    private Set<String> shorthands;
     private Vendor vendor;
     private boolean hasPositionalParameters;
     private boolean isSvgOnly;
@@ -928,8 +939,7 @@ public final class Property {
     private Builder(String name) {
       Preconditions.checkNotNull(name);
       this.name = name;
-      this.shorthands = computeShorthandPropertiesFor(name);
-      this.partition = Iterables.getFirst(this.shorthands, name);
+      this.shorthands = null;
       this.vendor = Vendor.parseProperty(name);
       this.hasPositionalParameters = false;
       this.isSvgOnly = false;
@@ -937,10 +947,14 @@ public final class Property {
     }
 
     public Property build() {
+      if (this.shorthands == null) {
+        this.shorthands = computeShorthandPropertiesFor(this.name);
+      }
+      String partition = Iterables.getFirst(this.shorthands, name);
       return new Property(
           this.name,
           this.shorthands,
-          this.partition,
+          partition,
           this.vendor,
           this.hasPositionalParameters,
           this.isSvgOnly,
@@ -963,6 +977,11 @@ public final class Property {
      */
     public Builder isSvgOnly() {
       this.isSvgOnly = true;
+      return this;
+    }
+
+    public Builder setShorthands(Set<String> shorthands) {
+      this.shorthands = shorthands;
       return this;
     }
 

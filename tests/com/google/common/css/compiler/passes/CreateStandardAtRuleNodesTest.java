@@ -31,6 +31,7 @@ import com.google.common.css.compiler.passes.testing.PassesTestBase;
 /**
  * Unit tests for {@link CreateStandardAtRuleNodes}.
  *
+ * @author fbenz@google.com (Florian Benz)
  */
 public class CreateStandardAtRuleNodesTest extends PassesTestBase {
 
@@ -104,7 +105,7 @@ public class CreateStandardAtRuleNodesTest extends PassesTestBase {
         + "(com.google.common.css.compiler.ast.CssPropertyValueNode "
         + "(com.google.common.css.compiler.ast.CssLiteralNode sans)))))"
         + "(com.google.common.css.compiler.ast.CssImportRuleNode)))",
-        SExprPrinter.print(false /* includeHashCodes */, t));
+        SExprPrinter.print(false /* includeHashCodes */, false /* withLocationAnnotation */, t));
   }
 
   public void testPrintableImports() throws Exception {

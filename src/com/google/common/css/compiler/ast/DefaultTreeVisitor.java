@@ -19,6 +19,7 @@ package com.google.common.css.compiler.ast;
 /**
  * Visits everything and does nothing.
  *
+ * @author fbenz@google.com (Florian Benz)
  */
 public class DefaultTreeVisitor implements CssTreeVisitor {
 
@@ -283,6 +284,7 @@ public class DefaultTreeVisitor implements CssTreeVisitor {
   @Override
   public void leaveFontFace(CssFontFaceNode node) {}
 
+  @Override
   public boolean enterAttributeSelector(
       CssAttributeSelectorNode attributeSelector) {
     return true;
@@ -339,4 +341,12 @@ public class DefaultTreeVisitor implements CssTreeVisitor {
 
   @Override
   public void leaveRequireNode(CssRequireNode node) {}
+
+  @Override
+  public boolean enterForLoop(CssForLoopRuleNode node) {
+    return true;
+  }
+
+  @Override
+  public void leaveForLoop(CssForLoopRuleNode node) {}
 }

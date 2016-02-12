@@ -18,22 +18,21 @@ package com.google.common.css.compiler.ast;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.css.SourceCode;
+import com.google.common.css.SourceCodeLocation;
 import com.google.common.css.compiler.passes.CompactPrinter;
 import com.google.common.css.compiler.passes.testing.AstPrinter;
 
 import junit.framework.TestCase;
 
+import java.util.List;
+
 /**
  * Unit tests for the {@link GssParser}.
  *
+ * @author fbenz@google.com (Florian Benz)
  */
 
 public class GssParserTest extends TestCase {
-
-  private CssTree parse(String gss) throws GssParserException {
-    GssParser parser = new GssParser(new SourceCode("test", gss));
-    return parser.parse();
-  }
 
   private CssTree testValid(String gss) throws GssParserException {
     CssTree tree = parse(gss);
@@ -50,10 +49,10 @@ public class GssParserTest extends TestCase {
   }
 
   public void testManySources() throws Exception {
-    CssTree tree = new GssParser(ImmutableList.of(
+    CssTree tree = parse(ImmutableList.of(
         new SourceCode("test1", "a {}"),
         new SourceCode("test2", "@component c { x {y: z} }"),
-        new SourceCode("test3", "b {}"))).parse();
+        new SourceCode("test3", "b {}")));
     CssRootNode root = tree.getRoot();
     assertNotNull(root);
     assertEquals("[[a]{[]}@component [c]{[x]{[y:[[z]];]}}[b]{[]}]",
@@ -162,6 +161,11 @@ public class GssParserTest extends TestCase {
              "[[.a]{[d:[[e][[f],[g]][h]];]}]");
   }
 
+  public void testAst24() throws Exception {
+    testTree("a~b/deep/c { d: e }",
+             "[[a~b/deep/c]{[d:[[e]];]}]");
+  }
+
   public void testParsingRules1() throws Exception {
     testValid("css_rule33 {\n" +
         "border: black ; /* comment */\n" +
@@ -224,6 +228,10 @@ public class GssParserTest extends TestCase {
     testValid("a ~ b { x: y}");
   }
 
+  public void testParsingSelector7() throws Exception {
+    testValid("a /deep/ b { x: y}");
+  }
+
   public void testParsingExpr1() throws Exception {
     testValid("aab {x:s r t}");
   }
@@ -252,6 +260,21 @@ public class GssParserTest extends TestCase {
     testValid("a { x: f(1, 2, 3) }");
   }
 
+  public void testParsingFilterFunctions() throws Exception {
+    testValid("a { filter: drop-shadow(1 2 3) custom(1 2 3);"
+              + "filter: drop-shadow(1, 2, 3) custom(1, 2, 3);}");
+  }
+
+  public void testParsingWebkitFilterFunctions() throws Exception {
+    testValid("a { filter: -webkit-drop-shadow(1 2) -webkit-custom(1 2);"
+              + "filter: -webkit-drop-shadow(1, 2) -webkit-custom(1, 2);}");
+  }
+
+  public void testParsingLocalFunctions() throws Exception {
+    testValid("@font-face { src: local(Gentium), url(Gentium.woff);"
+              + "src: local(Gentium Bold), local(Gentium-Bold), url(GentiumBold.woff);}");
+  }
+
   public void testParsingAt1() throws Exception {
     testValid("@import url('http://test.com/test.css');");
   }
@@ -271,13 +294,6 @@ public class GssParserTest extends TestCase {
     testValid("@def RC_TOP_LEFT        tl;\n" +
         "@def RC_TOP_RIGHT       tr;\n" +
         "@def BASE_WARNING_LINK_COLOR   #c3d9ff; /* light blue */"
-    );
-  }
-
-  public void testParsingDef2() throws Exception {
-    testValid("@def NOTIFY_TOP_LEFT_CORNER_BG\n" +
-        "roundedCornerImage(NOTIFY_BG_COLOR,\n" +
-        "NOTIFY_TOP_BORDER_HEIGHT, RC_TOP_LEFT, IE6_FLAG);"
     );
   }
 
@@ -385,6 +401,22 @@ public class GssParserTest extends TestCase {
   public void testIeRect() throws Exception {
     // Non-standard IE workaround.
     testValid(".a { clip: rect(0 0 0 0);}");
+  }
+
+  public void testEllipse() throws Exception {
+    testValid(".a { clip-path: ellipse(150px 300px at 50% 50%);}");
+  }
+
+  public void testInset() throws Exception {
+    testValid(".a { clip-path: inset(100px 100px 100px 100px);}");
+  }
+
+  public void testCircle() throws Exception {
+    testValid(".a { clip-path: circle(50% at right 5px bottom 10px);}");
+  }
+
+  public void testPolygon() throws Exception {
+    testValid(".a { clip-path: polygon(0 0, 0 300px, 300px 600px);}");
   }
 
   public void testEqualAttribute() throws Exception {
@@ -518,6 +550,26 @@ public class GssParserTest extends TestCase {
 
   public void testMediaQuery() throws Exception {
     testValid("@media screen and (max-height: 300px) and (min-width: 20px) {}");
+  }
+
+  public void testMediaQueryRatioNoSpaces() throws Exception {
+    testValid("@media screen and (aspect-ratio: 3/4) {}");
+  }
+
+  public void testMediaQueryRatioWithSpaces() throws Exception {
+    testValid("@media screen and (aspect-ratio: 3 / 4) {}");
+  }
+
+  public void testMediaQueryRatioWithManyLeadingSpaces() throws Exception {
+    testValid("@media screen and (aspect-ratio: 3    / 4) {}");
+  }
+
+  public void testMediaQueryRatioWithTrailingSpaces() throws Exception {
+    testValid("@media screen and (aspect-ratio: 3/ 4) {}");
+  }
+
+  public void testMediaQueryRatioWithNoTrailingSpaces() throws Exception {
+    testValid("@media screen and (aspect-ratio: 3 /4) {}");
   }
 
   public void testMozLinearGradient() throws Exception {
@@ -778,12 +830,100 @@ public class GssParserTest extends TestCase {
       "@list l0 {mso-list-id:792754432;]"};
     for (String css : samples) {
       try {
-        CssTree t = parse(css);
+        parse(css);
         fail("The compiler should only accept complete @list rules, not "
             + css);
       } catch (GssParserException e) {
         // expected
       }
     }
+  }
+
+  public void testCustomBorderProperty() throws Exception {
+    testTree(
+        "a { border-height: 1em; }",
+        "[[a]{[border-height:[[1em]];]}]");
+    testTree(
+        "a { border-left-height: 1em; }",
+        "[[a]{[border-left-height:[[1em]];]}]");
+    testTree(
+        "a { border-right-height: 1em; }",
+        "[[a]{[border-right-height:[[1em]];]}]");
+    testTree(
+        "a { border-top-height: 1em; }",
+        "[[a]{[border-top-height:[[1em]];]}]");
+    testTree(
+        "a { border-bottom-height: 1em; }",
+        "[[a]{[border-bottom-height:[[1em]];]}]");
+  }
+
+  public void testForLoop() throws Exception {
+    testTree(
+        "@for $i from 1 to 6 {}",
+        "[@for [$i] [from] [1] [to] [6]{}]");
+  }
+
+  public void testForLoopWithStep() throws Exception {
+    testTree(
+        "@for $i from 1 to 6 step 2 {}",
+        "[@for [$i] [from] [1] [to] [6] [step] [2]{}]");
+  }
+
+  public void testForLoopWithVariables() throws Exception {
+    testTree(
+        "@for $i from $x to $y step $z {}",
+        "[@for [$i] [from] [$x] [to] [$y] [step] [$z]{}]");
+  }
+
+  public void testForLoopWithVariablesInBlock() throws Exception {
+    testTree(
+        "@for $i from 1 to 2 { .foo-$i { padding: $i } }",
+        "[@for [$i] [from] [1] [to] [2]{[.foo-$i]{[padding:[[$i]];]}}]");
+  }
+
+  public void testComments() throws GssParserException {
+    testTree("div {}/*comment*/", "[[div]{[]}]");
+    testTree("div {}/*comment*/p {}", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/***comment**/p {}", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/***c/o**m//m***e////nt**/p {}", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/***c/o**m//m/***e////nt/***/p {}", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/****************/p {}", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/**/p {}", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/**/p {}/**/", "[[div]{[]}[p]{[]}]");
+    testTree("div {}/**/p {}/**/div {}", "[[div]{[]}[p]{[]}[div]{[]}]");
+  }
+
+  public void testUnicodeRange() throws Exception {
+    testValid("@font-face { unicode-range: U+26;}");
+    testValid("@font-face { unicode-range: U+0015-00FF;}");
+    testValid("@font-face { unicode-range: U+A015-C0FF;}");
+    testValid("@font-face { unicode-range: U+26??;}");
+  }
+
+  public void testNumericNodeLocation() throws GssParserException {
+    CssTree tree = new GssParser(new SourceCode(null, "div{width:99px;}")).parse();
+    final CssNumericNode[] resultHolder = new CssNumericNode[1];
+    tree.getVisitController().startVisit(new DefaultTreeVisitor() {
+      @Override
+      public boolean enterValueNode(CssValueNode value) {
+        if (value instanceof CssNumericNode) {
+          assertNull(resultHolder[0]);
+          resultHolder[0] = (CssNumericNode) value;
+        }
+        return true;
+      }
+    });
+    assertNotNull(resultHolder[0]);
+    SourceCodeLocation location = resultHolder[0].getSourceCodeLocation();
+    assertEquals(3, location.getEndCharacterIndex() - location.getBeginCharacterIndex());
+  }
+
+  private CssTree parse(List<SourceCode> sources) throws GssParserException {
+    GssParser parser = new GssParser(sources);
+    return parser.parse();
+  }
+
+  private CssTree parse(String gss) throws GssParserException {
+    return parse(ImmutableList.of(new SourceCode("test", gss)));
   }
 }
